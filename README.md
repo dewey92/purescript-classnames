@@ -37,7 +37,7 @@ csx :: ∀ a r i. ClassNames a => a -> H.IProp ( class :: String | r ) i
 csx a = P.classes $ map H.ClassName (classNames' a)
 ```
 
-Basically `classNames'` returns `Array String` which you cann then transform to the data structure you want.
+Basically `classNames'` returns `Array String` which you can then map/fold to any data structure you want.
 
 # License
 MIT. Copyright (c) 2020 Jihad D. Waspada.

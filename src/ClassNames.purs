@@ -39,23 +39,23 @@ instance maybeClassNames :: ClassNames a => ClassNames (Maybe a) where
 instance tupleClassNames :: (ClassNames l, ClassNames r) => ClassNames (l ^ r) where
   classNames' (l ^ r) = classNames' l <> classNames' r
 
-instance recordClassNames :: (RecordClassName row rl, RL.RowToList row rl) => ClassNames (Record row) where
+instance recordClassNames :: (RecordClassNames row rl, RL.RowToList row rl) => ClassNames (Record row) where
   classNames' row = recToClassNames row (RLProxy :: RLProxy rl)
 
-class RecordClassName (input :: # Type) (rl :: RL.RowList) where
-  recToClassNames :: Record input -> RLProxy rl -> Array String
+class RecordClassNames (row :: # Type) (rl :: RL.RowList) where
+  recToClassNames :: Record row -> RLProxy rl -> Array String
 
-instance emptyRecordClassName :: RecordClassName input RL.Nil where
+instance emptyRecordClassNames :: RecordClassNames row RL.Nil where
   recToClassNames _ _ = []
 
-instance boolRecordClassName
+instance boolRecordClassNames
   ::
-  ( RecordClassName row tail
+  ( RecordClassNames row tail
   , IsSymbol label
   , Row.Cons label Boolean rowTail row
-  ) => RecordClassName row (RL.Cons label Boolean tail) where
-  recToClassNames obj _ = classname <> rest where
+  ) => RecordClassNames row (RL.Cons label Boolean tail) where
+  recToClassNames record _ = classname <> rest where
     key = SProxy :: SProxy label
-    value = get key obj
+    value = get key record
     classname = if value then [reflectSymbol key] else []
-    rest = recToClassNames obj (RLProxy :: RLProxy tail)
+    rest = recToClassNames record (RLProxy :: RLProxy tail)
