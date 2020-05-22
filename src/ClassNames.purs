@@ -26,29 +26,29 @@ classNames a = joinWith " " $ classNames' a
 class ClassNames a where
   classNames' :: a -> Array String
 
-instance strValidCsxType :: ClassNames String where
+instance strClassNames :: ClassNames String where
   classNames' str = [str]
 
-instance arrValidCsxType :: ClassNames a => ClassNames (Array a) where
+instance arrClassNames :: ClassNames a => ClassNames (Array a) where
   classNames' = (=<<) classNames'
 
-instance maybeValidCsxType :: ClassNames a => ClassNames (Maybe a) where
+instance maybeClassNames :: ClassNames a => ClassNames (Maybe a) where
   classNames' Nothing = []
   classNames' (Just a) = classNames' a
 
-instance tupleValidCsxType :: (ClassNames l, ClassNames r) => ClassNames (l ^ r) where
+instance tupleClassNames :: (ClassNames l, ClassNames r) => ClassNames (l ^ r) where
   classNames' (l ^ r) = classNames' l <> classNames' r
 
-instance recordValidCsxType :: (RecordClassName row rl, RL.RowToList row rl) => ClassNames (Record row) where
-  classNames' = recToClx
+instance recordClassNames :: (RecordClassName row rl, RL.RowToList row rl) => ClassNames (Record row) where
+  classNames' row = recToClassNames row (RLProxy :: RLProxy rl)
 
 class RecordClassName (input :: # Type) (rl :: RL.RowList) where
   recToClassNames :: Record input -> RLProxy rl -> Array String
 
-instance emptyClassName :: RecordClassName input RL.Nil where
+instance emptyRecordClassName :: RecordClassName input RL.Nil where
   recToClassNames _ _ = []
 
-instance boolClassName
+instance boolRecordClassName
   ::
   ( RecordClassName row tail
   , IsSymbol label
@@ -59,9 +59,3 @@ instance boolClassName
     value = get key obj
     classname = if value then [reflectSymbol key] else []
     rest = recToClassNames obj (RLProxy :: RLProxy tail)
-
-recToClx :: ∀ r rl.
-  RL.RowToList r rl =>
-  RecordClassName r rl =>
-  Record r -> Array String
-recToClx r = recToClassNames r (RLProxy :: RLProxy rl)

@@ -26,7 +26,7 @@ Note that when you pass a record of booleans, the resulting value will be in alp
 
 ## Integration with Other Libraries
 
-If your library forces you to wrap the classNames in a newtype, you can still use it by creating your own utility function with `classNames'`. For instance, Halogen requires classNames to be wrapped in `Halogen.HTML.ClassName`.
+If your library forces you to wrap the classNames in a newtype, you can still use it by creating your own utility function with `classNames'`. For instance, Halogen requires classNames to be wrapped in `Halogen.HTML.ClassName`:
 
 ```purs
 import ClassNames (class ClassNames, classNames')
