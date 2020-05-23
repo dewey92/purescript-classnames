@@ -1,7 +1,9 @@
 module ClassNames
   ( class ClassNames
+  , class RecordClassNames
   , classNames'
   , classNames
+  , recToClassNames
   , type (^)
   , (^)
   ) where

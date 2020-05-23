@@ -2,10 +2,22 @@ module Test.Main where
 
 import Prelude
 
+import ClassNames (classNames, (^))
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Effect.Class.Console (log)
+import Effect.Aff (launchAff_)
+import Test.Spec (describe, it)
+import Test.Spec.Assertions (shouldEqual)
+import Test.Spec.Reporter.Console (consoleReporter)
+import Test.Spec.Runner (runSpec)
 
 main :: Effect Unit
-main = do
-  log "🍝"
-  log "You should add some tests."
+main = launchAff_ $ runSpec [consoleReporter] do
+  describe "purescript-classnames" do
+    it "generetas classes for strings, arrays, maybes, and records" do
+      let record = { key1: true, key2: false }
+      let csx = classNames ("str" ^ Just "maybe" ^ (Nothing :: Maybe String) ^ ["arr1", "arr2"] ^ record)
+      csx `shouldEqual` "str maybe arr1 arr2 key1"
+    it "resolves nested classnames" do
+      let csx = classNames ([Just "maybe1"] ^ Just (Just "maybe2") ^ Just ["arr1", "arr2"] ^ [["arr3"], ["arr4"]])
+      csx `shouldEqual` "maybe1 maybe2 arr1 arr2 arr3 arr4"
