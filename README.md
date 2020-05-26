@@ -22,7 +22,7 @@ classNames ({
 } ^ [Just "container"]) -- "center flex-row container"
 ```
 
-Note that when you pass a record of booleans, the resulting value will be in alphabetical order as it's using `RowToList` under the hood.
+Note that when you pass a record of booleans, the resulting value will be sorted in alphabetical order as it's using `RowToList` under the hood.
 
 ## Integration with Other Libraries
 
@@ -33,8 +33,8 @@ import ClassNames (class ClassNames, classNames')
 import Halogen.HTML as H
 import Halogen.HTML.Properties as P
 
-csx :: ∀ a r i. ClassNames a => a -> H.IProp ( class :: String | r ) i
-csx a = P.classes $ map H.ClassName (classNames' a)
+cxs :: ∀ a r i. ClassNames a => a -> H.IProp ( class :: String | r ) i
+cxs a = P.classes $ map H.ClassName (classNames' a)
 ```
 
 Basically `classNames'` returns `Array String` which you can then map/fold to any data structure you want.
