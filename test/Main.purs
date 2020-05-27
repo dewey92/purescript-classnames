@@ -16,8 +16,15 @@ main = launchAff_ $ runSpec [consoleReporter] do
   describe "purescript-classnames" do
     it "generetas classes for strings, arrays, maybes, and records" do
       let record = { key1: true, key2: false }
-      let csx = classNames ("str" ^ Just "maybe" ^ (Nothing :: Maybe String) ^ ["arr1", "arr2"] ^ record)
-      csx `shouldEqual` "str maybe arr1 arr2 key1"
+      let cxs = classNames ("str" ^ Just "maybe" ^ (Nothing :: Maybe String) ^ ["arr1", "arr2"] ^ record)
+      cxs `shouldEqual` "str maybe arr1 arr2 key1"
+
     it "resolves nested classnames" do
-      let csx = classNames ([Just "maybe1"] ^ Just (Just "maybe2") ^ Just ["arr1", "arr2"] ^ [["arr3"], ["arr4"]])
-      csx `shouldEqual` "maybe1 maybe2 arr1 arr2 arr3 arr4"
+      let cxs = classNames (
+          [Just "maybe1", Just "maybe2"]
+        ^ Just (Just "maybe3")
+        ^ Just ["arr1", "arr2"]
+        ^ [["arr3"], ["arr4", "arr5"]]
+        ^ Just { key1: true, key2: false }
+      )
+      cxs `shouldEqual` "maybe1 maybe2 maybe3 arr1 arr2 arr3 arr4 arr5 key1"
