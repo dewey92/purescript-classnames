@@ -44,7 +44,7 @@ instance tupleClassNames :: (ClassNames l, ClassNames r) => ClassNames (l ^ r) w
 instance recordClassNames :: (RecordClassNames row rl, RL.RowToList row rl) => ClassNames (Record row) where
   classNames' row = recToClassNames row (RLProxy :: RLProxy rl)
 
-class RecordClassNames (row :: # Type) (rl :: RL.RowList) where
+class RecordClassNames (row :: Row Type) (rl :: RL.RowList Type) where
   recToClassNames :: Record row -> RLProxy rl -> Array String
 
 instance emptyRecordClassNames :: RecordClassNames row RL.Nil where
