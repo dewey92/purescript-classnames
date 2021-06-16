@@ -19,7 +19,7 @@ classNames ({
   "flex-row": true,
   "is-mobile": false,
   "center": true,
-} ^ [Just "container"]) -- "center container flex-row"
+} ^ [Just "container"]) -- "center flex-row container"
 ```
 
 Note that when you pass a record of booleans, the resulting value will be sorted in alphabetical order as it's using `RowToList` under the hood.
