@@ -12,12 +12,12 @@ import Prelude
 
 import Data.Maybe (Maybe(..))
 import Data.String (joinWith)
-import Data.Symbol (class IsSymbol, SProxy(..), reflectSymbol)
+import Data.Symbol (class IsSymbol, reflectSymbol)
 import Data.Tuple (Tuple(..))
 import Prim.Row as Row
 import Prim.RowList as RL
 import Record (get)
-import Type.Data.RowList (RLProxy(..))
+import Type.Proxy (Proxy(..))
 
 infixr 6 type Tuple as ^
 infixr 6 Tuple as ^
@@ -42,10 +42,10 @@ instance tupleClassNames :: (ClassNames l, ClassNames r) => ClassNames (l ^ r) w
   classNames' (l ^ r) = classNames' l <> classNames' r
 
 instance recordClassNames :: (RecordClassNames row rl, RL.RowToList row rl) => ClassNames (Record row) where
-  classNames' row = recToClassNames row (RLProxy :: RLProxy rl)
+  classNames' row = recToClassNames row (Proxy :: Proxy rl)
 
 class RecordClassNames (row :: Row Type) (rl :: RL.RowList Type) where
-  recToClassNames :: Record row -> RLProxy rl -> Array String
+  recToClassNames :: Record row -> Proxy rl -> Array String
 
 instance emptyRecordClassNames :: RecordClassNames row RL.Nil where
   recToClassNames _ _ = []
@@ -57,7 +57,7 @@ instance boolRecordClassNames
   , Row.Cons label Boolean rowTail row
   ) => RecordClassNames row (RL.Cons label Boolean tail) where
   recToClassNames record _ = classname <> rest where
-    key = SProxy :: SProxy label
+    key = Proxy :: Proxy label
     value = get key record
     classname = if value then [reflectSymbol key] else []
-    rest = recToClassNames record (RLProxy :: RLProxy tail)
+    rest = recToClassNames record (Proxy :: Proxy tail)
